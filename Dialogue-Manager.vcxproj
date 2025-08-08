@@ -93,6 +93,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\include\ImGui\;$(SolutionDir)\libraries\include\ImGui-SFML\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -109,6 +110,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\include\ImGui\;$(SolutionDir)\libraries\include\ImGui-SFML\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -125,6 +127,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\include\ImGui\;$(SolutionDir)\libraries\include\ImGui-SFML\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,6 +144,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>$(SolutionDir)\libraries\include\ImGui\;$(SolutionDir)\libraries\include\ImGui-SFML\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,9 +155,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="libraries\include\ImGui-SFML\imgui-SFML.cpp" />
+    <ClCompile Include="libraries\include\ImGui\imgui.cpp" />
+    <ClCompile Include="libraries\include\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="libraries\include\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="libraries\include\ImGui\imgui_widgets.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libraries\include\ImGui-SFML\imgui-SFML.h" />
+    <ClInclude Include="libraries\include\ImGui-SFML\imgui-SFML_export.h" />
+    <ClInclude Include="libraries\include\ImGui\imconfig.h" />
+    <ClInclude Include="libraries\include\ImGui\imgui.h" />
+    <ClInclude Include="libraries\include\ImGui\imgui_internal.h" />
     <ClInclude Include="libraries\include\SFML\Audio.hpp" />
     <ClInclude Include="libraries\include\SFML\Audio\AudioResource.hpp" />
     <ClInclude Include="libraries\include\SFML\Audio\Export.hpp" />

@@ -1,0 +1,4 @@
+[submodule "Dialogue-Manager/vendor/ImGui"]
+	path = Dialogue-Manager/vendor/ImGui
+	url = https://github.com/IkelosVoidz/imgui-premake.git
+	branch = imgui-sfml-docking

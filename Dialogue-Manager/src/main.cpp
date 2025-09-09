@@ -2,7 +2,7 @@
 #include <imgui.h>
 #include <imgui-SFML.h>
 #include <SFML/Graphics.hpp>
-#include "../include/DialogueTree.h"
+#include "DialogueTree.h"
 
 
 void SetDarkThemeColors(){

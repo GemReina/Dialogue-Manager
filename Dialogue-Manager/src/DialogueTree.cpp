@@ -1,4 +1,4 @@
-#include "../include/DialogueTree.h"
+#include "DialogueTree.h"
 
 #include <iostream>
 

@@ -1,4 +1,4 @@
-#include "../include/DialogueNode.h"
+#include "DialogueNode.h"
 
 DialogueNode::DialogueNode(int id, DialogueNodeType type)
     : id(id), type(type) {

@@ -7,11 +7,12 @@ project "Dialogue-Manager"
     targetdir ("%{wks.location}/binaries/bin/" .. OutputDir .. "/%{prj.name}")
     objdir ("%{wks.location}/binaries/bin-int/" .. OutputDir .. "/%{prj.name}")
 
-    files { "src/**.h", "src/**.cpp" }
+    files { "include/**.h", "src/**.cpp" }
 
     includedirs
     {
         "src",
+        "include",
         "%{IncludeDir.SFML}",
         "%{IncludeDir.ImGui}",
     }

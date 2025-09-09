@@ -1,6 +1,8 @@
+#include <iostream>
 #include <imgui.h>
 #include <imgui-SFML.h>
 #include <SFML/Graphics.hpp>
+#include "../include/DialogueTree.h"
 
 
 void SetDarkThemeColors(){
@@ -75,7 +77,27 @@ void EnableDocking() {
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode({ 800, 800 }), "ImGui + SFML = <3");
+    DialogueTree project("My First Dialogue Tree");
+
+    // Create two nodes
+    int node1 = project.createNode(DialogueNodeType::Basic);
+    int node2 = project.createNode(DialogueNodeType::Basic);
+
+    // Modify them
+    project.nodes[node1].setCharacter("Hero");
+    project.nodes[node1].setText("Hello there!");
+
+    project.nodes[node2].setCharacter("Villain");
+    project.nodes[node2].setText("We meet again...");
+
+    // Connect node1 -> node2
+    project.connectNodes(node1, node2);
+
+    // Print
+    project.printTree();
+
+    return 0;
+    /*sf::RenderWindow window(sf::VideoMode({800, 800}), "ImGui + SFML = <3");
     window.setFramerateLimit(60);
     if (!ImGui::SFML::Init(window))
         return -1;
@@ -115,5 +137,5 @@ int main()
         window.display();
     }
 
-    ImGui::SFML::Shutdown();
+    ImGui::SFML::Shutdown();*/
 }

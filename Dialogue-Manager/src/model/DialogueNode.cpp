@@ -1,7 +1,7 @@
-#include "DialogueNode.h"
+#include "model/DialogueNode.h"
 
-DialogueNode::DialogueNode(int id, DialogueNodeType type)
-    : id(id), type(type) {
+DialogueNode::DialogueNode(int id_, DialogueNodeType type_)
+    : id(id_), type(type_) {
 }
 
 void DialogueNode::setText(const std::string& newText) {

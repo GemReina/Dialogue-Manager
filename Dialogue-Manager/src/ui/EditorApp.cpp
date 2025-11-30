@@ -3,6 +3,7 @@
 #include "io/JsonSerializer.h"
 #include "ui/PreviewPanel.h"
 #include <imgui.h>
+#include "runtime/DialoguePlayer.h"
 
 EditorApp::EditorApp() {
     NewTree("New Dialogue Tree");
@@ -43,13 +44,21 @@ void EditorApp::drawMainMenu() {
             }
             ImGui::EndMenu();
         }
+
+        // runtime toggle
+        if (ImGui::BeginMenu("Runtime")) {
+            ImGui::MenuItem("Runtime Mode", nullptr, &runtimeMode);
+            ImGui::EndMenu();
+        }
+
         ImGui::EndMainMenuBar();
     }
 }
 
 void EditorApp::drawDockspace() {
-    ImGui::SetNextWindowPos(ImVec2(0, 20), ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize, ImGuiCond_Once);
+    // Ensure dockspace covers the whole application viewport and updates when window is resized
+    ImGui::SetNextWindowPos(ImVec2(0, 20), ImGuiCond_Always);
+    ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize, ImGuiCond_Always);
     ImGuiWindowFlags flags = ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
         ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove |
         ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
@@ -69,5 +78,12 @@ void EditorApp::Frame() {
 
     // Use PreviewPanel
     static PreviewPanel preview;
-    preview.Draw(tree, canvasState.selectedNodeId);
+    static DialoguePlayer player;
+    if (runtimeMode) {
+        // if not playing yet, start at root
+        if (!player.IsPlaying()) player.Start(tree, tree.rootId);
+        preview.DrawRuntime(player);
+    } else {
+        preview.Draw(tree, canvasState.selectedNodeId);
+    }
 }

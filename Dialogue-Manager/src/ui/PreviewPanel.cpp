@@ -1,5 +1,6 @@
 #include "ui/PreviewPanel.h"
 #include <imgui.h>
+#include "runtime/DialoguePlayer.h"
 
 void PreviewPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
     ImGui::Begin("Preview");
@@ -43,6 +44,39 @@ void PreviewPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
                 if (tree.nodes.count(cid)) selectedNodeId = cid;
             }
         }
+    }
+
+    ImGui::End();
+}
+
+void PreviewPanel::DrawRuntime(DialoguePlayer& player) {
+    ImGui::Begin("Runtime Preview");
+    const DialogueNode* node = player.GetCurrentNode();
+    if (!node) {
+        ImGui::TextDisabled("Not playing");
+        if (ImGui::Button("Start at root")) {
+            // can't start here because player needs tree; leave control to user code
+        }
+        ImGui::End();
+        return;
+    }
+
+    ImGui::TextColored(ImVec4(0.8f, 0.8f, 1.0f, 1.0f), "%s", node->characterId.c_str());
+    ImGui::Separator();
+    ImGui::TextWrapped("%s", node->text.c_str());
+
+    auto opts = player.GetOptions();
+    if (!opts.empty()) {
+        ImGui::Separator();
+        ImGui::Text("Options:");
+        for (size_t i = 0; i < opts.size(); ++i) {
+            auto &p = opts[i];
+            if (ImGui::Button(p.first.c_str())) {
+                player.ChooseOption(i);
+            }
+        }
+    } else {
+        if (ImGui::Button("Next")) player.Next();
     }
 
     ImGui::End();

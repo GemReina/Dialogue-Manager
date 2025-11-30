@@ -20,26 +20,21 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
 
     DialogueNode& n = it->second;
 
-    // Show last action for debugging
-    if (!tree.lastAction.empty()) {
-        ImGui::TextColored(ImVec4(0.6f, 0.8f, 0.6f, 1.0f), "Last: %s", tree.lastAction.c_str());
-    }
-
-    // Tipo de nodo
+    // Node type
     int typeIndex = (n.type == DialogueNodeType::Basic) ? 0 : 1;
     const char* types[] = { "Basic", "Options" };
     if (ImGui::Combo("Type", &typeIndex, types, IM_ARRAYSIZE(types))) {
         n.type = (typeIndex == 0) ? DialogueNodeType::Basic : DialogueNodeType::Options;
     }
 
-    // Personaje
+    // Character
     static char charBuf[128];
     strncpy_s(charBuf, sizeof(charBuf), n.characterId.c_str(), _TRUNCATE);
     if (ImGui::InputText("Character", charBuf, IM_ARRAYSIZE(charBuf))) {
         n.characterId = charBuf;
     }
 
-    // Texto
+    // Text
     static char textBuf[512];
     strncpy_s(textBuf, sizeof(textBuf), n.text.c_str(), _TRUNCATE);
     if (ImGui::InputTextMultiline("Text", textBuf, IM_ARRAYSIZE(textBuf), ImVec2(0, 100))) {
@@ -107,12 +102,10 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
                                 tree.disconnectNodes(n.id, opt.childId);
                                 n.children.erase(std::remove(n.children.begin(), n.children.end(), opt.childId), n.children.end());
                                 opt.childId = -1;
-                                tree.lastAction = "Disconnected option child";
                             }
                         } else {
                             if (opt.childId == chosenId) {
                                 // already assigned, do nothing
-                                tree.lastAction = "Option already assigned";
                             } else {
                                 if (opt.childId != -1) {
                                     tree.disconnectNodes(n.id, opt.childId);
@@ -124,7 +117,6 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
                                 auto itc = tree.nodes.find(chosenId);
                                 if (itc != tree.nodes.end()) { itc->second.x = n.x + 200.0f; itc->second.y = n.y; }
                                 selectedNodeId = chosenId;
-                                tree.lastAction = "Assigned option child";
                             }
                         }
                         tree.printTree();
@@ -144,7 +136,6 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
                 tree.connectNodes(n.id, cid);
                 if (std::find(n.children.begin(), n.children.end(), cid) == n.children.end()) n.children.push_back(cid);
                 selectedNodeId = cid;
-                tree.lastAction = "Created and assigned new option child";
                 tree.printTree();
             }
 
@@ -154,7 +145,6 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
                 if (opt.childId != -1) {
                     tree.disconnectNodes(n.id, opt.childId);
                     n.children.erase(std::remove(n.children.begin(), n.children.end(), opt.childId), n.children.end());
-                    tree.lastAction = "Removed option child";
                     tree.printTree();
                 }
                 n.options.erase(n.options.begin() + i);
@@ -169,7 +159,7 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
         }
     }
 
-    // Hijos (legacy)
+    // Children (legacy)
     ImGui::Separator();
     ImGui::Text("Children:");
     for (int child : n.children) {
@@ -183,7 +173,6 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
             for (auto& opt : n.options) {
                 if (opt.childId == child) opt.childId = -1;
             }
-            tree.lastAction = "Disconnected legacy child";
             tree.printTree();
             break;
         }
@@ -205,7 +194,6 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
                         auto itc = tree.nodes.find(chosenId);
                         if (itc != tree.nodes.end()) { itc->second.x = n.x + 200.0f; itc->second.y = n.y; }
                         selectedNodeId = chosenId;
-                        tree.lastAction = "Assigned legacy child";
                         tree.printTree();
                     }
                 }
@@ -221,17 +209,16 @@ void InspectorPanel::Draw(DialogueTree& tree, int& selectedNodeId) {
         tree.connectNodes(n.id, cid);
         if (std::find(n.children.begin(), n.children.end(), cid) == n.children.end()) n.children.push_back(cid);
         selectedNodeId = cid; // select the newly created child
-        tree.lastAction = "Added new child";
         tree.printTree();
     }
 
-    // Botón de borrar nodo
+    // Delete node button
     ImGui::Separator();
     if (ImGui::Button("Delete node")) {
         tree.removeNode(n.id);
-        selectedNodeId = -1; // deseleccionamos el nodo eliminado
+        selectedNodeId = -1; // deselect removed node
         ImGui::End();
-        return; // salimos para evitar acceder al nodo borrado
+        return; // exit to avoid accessing deleted node
     }
 
     ImGui::End();

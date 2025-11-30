@@ -19,6 +19,11 @@ struct Event {
     std::unordered_map<std::string, std::string> params;
 };
 
+struct Option {
+    std::string text;
+    int childId = -1; // id of the child node for this option, -1 = none
+};
+
 class DialogueNode {
 public:
     int id = -1;
@@ -31,7 +36,8 @@ public:
 
     int uiStyleId = -1;
 
-    std::vector<int> children;       // edges to child node ids
+    std::vector<int> children;       // edges to child node ids (legacy / general-purpose)
+    std::vector<Option> options;     // option entries for Options node type
     std::vector<Condition> conditions;
     std::vector<Event> events;
 

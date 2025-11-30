@@ -20,6 +20,9 @@ public:
 
     int rootId = -1;
 
+    // Debugging: last action performed on the tree
+    std::string lastAction;
+
     DialogueTree() = default;
     explicit DialogueTree(const std::string& treeName);
 

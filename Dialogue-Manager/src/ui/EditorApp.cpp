@@ -1,6 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include "ui/EditorApp.h"
 #include "io/JsonSerializer.h"
+#include "ui/PreviewPanel.h"
 #include <imgui.h>
 
 EditorApp::EditorApp() {
@@ -66,7 +67,7 @@ void EditorApp::Frame() {
     inspector.Draw(tree, canvasState.selectedNodeId); // ← ahora pasa por referencia
     charPanel.Draw(tree);
 
-    ImGui::Begin("Preview");
-    ImGui::Text("Black background preview (runtime styling later)");
-    ImGui::End();
+    // Use PreviewPanel
+    static PreviewPanel preview;
+    preview.Draw(tree, canvasState.selectedNodeId);
 }

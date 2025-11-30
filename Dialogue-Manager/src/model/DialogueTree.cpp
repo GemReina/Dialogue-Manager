@@ -14,6 +14,8 @@ int DialogueTree::createNode(DialogueNodeType type) {
     node.y = float((id / 5) * 140);
     nodes.emplace(id, std::move(node));
     if (rootId == -1) rootId = id;
+    lastAction = "Created node " + std::to_string(id);
+    std::cout << "Created node " << id << " type=" << (type == DialogueNodeType::Basic ? "Basic" : "Options") << "\n";
     return id;
 }
 
@@ -21,8 +23,14 @@ void DialogueTree::removeNode(int id) {
     nodes.erase(id);
     for (auto& [nid, n] : nodes) {
         n.children.erase(std::remove(n.children.begin(), n.children.end(), id), n.children.end());
+        // Also clear option references to the removed node
+        for (auto& opt : n.options) {
+            if (opt.childId == id) opt.childId = -1;
+        }
     }
     if (rootId == id) rootId = nodes.empty() ? -1 : nodes.begin()->first;
+    lastAction = "Removed node " + std::to_string(id);
+    std::cout << "Removed node " << id << "\n";
 }
 
 void DialogueTree::connectNodes(int fromId, int toId) {
@@ -30,6 +38,11 @@ void DialogueTree::connectNodes(int fromId, int toId) {
         auto& v = nodes[fromId].children;
         if (std::find(v.begin(), v.end(), toId) == v.end())
             v.push_back(toId);
+        lastAction = "Connected node " + std::to_string(fromId) + " -> " + std::to_string(toId);
+        std::cout << "Connected node " << fromId << " -> " << toId << "\n";
+    } else {
+        lastAction = "Failed to connect " + std::to_string(fromId) + " -> " + std::to_string(toId);
+        std::cout << "Failed to connect " << fromId << " -> " << toId << " (missing node)\n";
     }
 }
 
@@ -37,6 +50,13 @@ void DialogueTree::disconnectNodes(int fromId, int toId) {
     if (nodes.count(fromId)) {
         auto& v = nodes[fromId].children;
         v.erase(std::remove(v.begin(), v.end(), toId), v.end());
+        // Clear any option entries that referenced this child
+        auto& opts = nodes[fromId].options;
+        for (auto& opt : opts) {
+            if (opt.childId == toId) opt.childId = -1;
+        }
+        lastAction = "Disconnected node " + std::to_string(fromId) + " -> " + std::to_string(toId);
+        std::cout << "Disconnected node " << fromId << " -> " << toId << "\n";
     }
 }
 
@@ -54,6 +74,11 @@ void DialogueTree::printTree() const {
         if (!node.children.empty()) {
             std::cout << "   Children: ";
             for (int child : node.children) std::cout << child << " ";
+            std::cout << "\n";
+        }
+        if (!node.options.empty()) {
+            std::cout << "   Options:";
+            for (const auto& o : node.options) std::cout << " (" << o.text << " -> " << o.childId << ")";
             std::cout << "\n";
         }
     }

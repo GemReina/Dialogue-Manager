@@ -27,6 +27,12 @@ namespace {
 
             jn["children"] = n.children;
 
+            // options
+            jn["options"] = json::array();
+            for (const auto& opt : n.options) {
+                jn["options"].push_back({ {"text", opt.text}, {"childId", opt.childId} });
+            }
+
             // conditions
             jn["conditions"] = json::array();
             for (const auto& c : n.conditions) {
@@ -94,6 +100,17 @@ namespace {
             if (pos.size() >= 2) { n.x = pos[0]; n.y = pos[1]; }
 
             n.children = jn.value("children", std::vector<int>{});
+
+            // options
+            n.options.clear();
+            if (jn.contains("options")) {
+                for (const auto& jo : jn["options"]) {
+                    Option o;
+                    o.text = jo.value("text", "");
+                    o.childId = jo.value("childId", -1);
+                    n.options.push_back(o);
+                }
+            }
 
             n.conditions.clear();
             if (jn.contains("conditions")) {
